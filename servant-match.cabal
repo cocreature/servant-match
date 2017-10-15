@@ -12,11 +12,12 @@ category:            Web
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
+tested-with:         GHC == 7.10.3, GHC == 8.0.2, GHC == 8.2.1
 
 library
   hs-source-dirs:     src
   exposed-modules:    Servant.Match
-  build-depends:      base >= 4.7 && < 5
+  build-depends:      base >= 4.8 && < 5
                     , bytestring
                     , http-types
                     , network-uri
