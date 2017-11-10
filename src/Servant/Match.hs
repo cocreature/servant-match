@@ -8,6 +8,7 @@
 
 module Servant.Match
   ( matchURI
+  , uriToLocation
   , Matches(..)
   , Location(..)
   ) where
@@ -30,7 +31,7 @@ data Location = Location
   { segments :: [String]
   , query :: [(String, Maybe String)]
   , isSecure :: IsSecure
-  }
+  } deriving (Show, Eq, Ord)
 
 class Matches api where
   type MatchT api r :: *
