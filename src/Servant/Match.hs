@@ -23,12 +23,12 @@ import           Data.Proxy
 import           Data.Text (Text)
 import qualified Data.Text as Text
 import           GHC.TypeLits
-import           Network.HTTP.Types (parseQuery)
+import           Network.HTTP.Types (parseQuery, decodePathSegments)
 import           Network.URI hiding (query)
 import           Servant.API
 
 data Location = Location
-  { segments :: [String]
+  { segments :: [Text]
   , query :: [(String, Maybe String)]
   , isSecure :: IsSecure
   } deriving (Show, Eq, Ord)
@@ -43,7 +43,7 @@ instance (KnownSymbol s, Matches sub) => Matches (s :> sub) where
     case segments l of
       [] -> Nothing
       (s':ss)
-        | s' == symbolVal (Proxy :: Proxy s) ->
+        | s' == Text.pack (symbolVal (Proxy :: Proxy s)) ->
           matchLocation (Proxy :: Proxy sub) p l {segments = ss}
         | otherwise -> Nothing
 
@@ -64,7 +64,7 @@ instance (Matches sub, FromHttpApiData a) =>
     case segments l of
       [] -> Nothing
       (s:ss) ->
-        case parseUrlPiece (Text.pack s) of
+        case parseUrlPiece s of
           Left _ -> Nothing
           Right a -> matchLocation (Proxy :: Proxy sub) (f a) l {segments = ss}
 
@@ -72,7 +72,7 @@ instance (Matches sub, FromHttpApiData a) =>
          Matches (CaptureAll sym a :> sub) where
   type MatchT (CaptureAll sym a :> sub) r = [a] -> MatchT sub r
   matchLocation _ f l =
-    case traverse (parseUrlPiece . Text.pack) (segments l) of
+    case traverse parseUrlPiece (segments l) of
       Left _ -> Nothing
       Right as -> matchLocation (Proxy :: Proxy sub) (f as) l {segments = []}
 
@@ -160,7 +160,7 @@ instance Matches sub => Matches (BasicAuth realm userData :> sub) where
 uriToLocation :: URI -> Location
 uriToLocation u =
   Location
-  { segments = pathSegments u
+  { segments = (decodePathSegments . UTF8.fromString . uriPath) u
   , query =
       (map (bimap UTF8.toString (fmap UTF8.toString)) .
        parseQuery . UTF8.fromString . uriQuery)
