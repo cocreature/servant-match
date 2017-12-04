@@ -1,6 +1,7 @@
-resolver: lts-9.8
+resolver: lts-9.14
 packages:
 - .
-extra-deps: []
+extra-deps:
+- servant-0.12
 flags: {}
 extra-package-dbs: []

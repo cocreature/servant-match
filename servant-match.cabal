@@ -1,7 +1,11 @@
 name:                servant-match
-version:             0.1.0.0
--- synopsis:
--- description:
+version:             0.1.0
+synopsis:            Standalone implementation of servant’s dispatching mechanism
+description:
+  This package provides a standalone implementation of dispatching a
+  function by matching it against a Servant API. A common usecase for
+  this is to convert an `URI` to an ADT that provides a more structured
+  representation of the URL.
 homepage:            https://github.com/cocreature/servant-match#readme
 license:             BSD3
 license-file:        LICENSE
@@ -12,7 +16,7 @@ category:            Web
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
-tested-with:         GHC == 7.10.3, GHC == 8.0.2, GHC == 8.2.1
+tested-with:         GHC == 7.10.3, GHC == 8.0.2, GHC == 8.2.2
 
 library
   hs-source-dirs:     src
@@ -21,7 +25,7 @@ library
                     , bytestring
                     , http-types
                     , network-uri
-                    , servant
+                    , servant >= 0.12
                     , text
                     , utf8-string
   default-language:   Haskell2010
