@@ -1,3 +1,35 @@
+-- | @servant-match@ provides a standalone implementation of
+-- dispatching a function by matching an `URI` against a servant
+-- API. This can be used to parse the `URI` into a more structured
+-- representation. For example:
+--
+-- @
+-- data DataView
+--   = Show
+--   | Edit
+--   deriving (Show, Eq)
+--
+-- data View
+--   = ViewUsers
+--   | ViewNewUser
+--   | ViewUser !Text !DataView
+--   deriving (Show, Eq)
+--
+-- data User = User
+--
+-- type API =
+--   "users" :> (Get '[JSON] [User] :\<|> "new" :> ReqBody '[JSON] User :> Post '[JSON] User) :\<|>
+--   "user" :> Capture "user" Text :>
+--     (Get '[JSON] User :\<|>
+--      "edit" :> ReqBody '[JSON] User :> Put '[JSON] User)
+--
+-- parser :: MatchT API View
+-- parser =
+--   (ViewUsers :\<|> ViewNewUser) :\<|> (\u -> ViewUser u Show :\<|> ViewUser u Edit)
+--
+-- parseView :: URI -> Maybe View
+-- parseView u = matchURI (Proxy :: Proxy API) parser u
+-- @
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
