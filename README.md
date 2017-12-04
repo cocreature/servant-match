@@ -1,5 +1,8 @@
 # servant-match
 
+[![Travis](https://img.shields.io/travis/cocreature/servant-match.svg)](https://travis-ci.org/cocreature/servant-match)
+[![Hackage](https://img.shields.io/hackage/v/servant-match.svg)](https://hackage.haskell.org/package/servant-match)
+
 This package provides a standalone implementation of dispatching a
 function by matching it against a Servant API. A common usecase for
 this is to convert an `URI` to an ADT that provides a more structured
